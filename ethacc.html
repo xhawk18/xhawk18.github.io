@@ -1,0 +1,50 @@
+<style>
+*{
+  font-family:monospace;
+}
+.blue{
+  color:blue;
+}
+</style>
+<script src="web3.min.js"></script>
+<script>
+var web3 = new Web3();
+
+function main(){
+    var LEN = document.getElementById('length').value;
+    LEN = parseInt(LEN, 10);
+    if(isNaN(LEN)) LEN = 3;
+
+    var new_account = web3.eth.accounts.create();
+    var ch = new_account.address.substr(2,1);
+    var prefix = "0x" + "".padEnd(LEN, ch);
+
+    var ch1 = new_account.address.substr(-1);
+    var dup = "".padEnd(LEN, ch1);
+
+    var address = new_account.address;//.toLowerCase();
+    if(address.substr(0, prefix.length) === prefix){
+        //console.log(prefix, new_account);
+        var html = document.createElement('span');
+        html.innerHTML = 'address: <span class=blue>' + prefix + '</span>' + new_account.address.substr(prefix.length) + ', privateKey: ' + new_account.privateKey + '<br>';
+        document.getElementById('result').appendChild(html);
+    } 
+    else if(address.substr(address.length - dup.length) === dup){
+        //console.log('=>' + dup, new_account);
+        var html = document.createElement('span');
+        html.innerHTML = 'address: ' + new_account.address.substr(0, new_account.address.length - dup.length) + '<span class=blue>' + dup + '</span>, privateKey: ' + new_account.privateKey + '<br>';
+        document.getElementById('result').appendChild(html);
+    } 
+
+    if(window.setImmediate) window.setImmediate(main);
+    else setTimeout(main, 0);
+}
+
+</script>
+<body onload="main()">
+<form>
+产生<input id="length" value="3" style="width:32px"/>位同号
+</form>
+<div id="result"></div>
+</body>
+
