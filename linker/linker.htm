@@ -1,0 +1,1633 @@
+﻿<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<!--
+Copyright: The linker puzzle is developped by chenon (2011)
+at gmail dot com, and can not be used in other applications
+or software without the author's permission.
+-->
+<script src='msg_head.js'></script>
+<script src='linker.js'></script>
+<script src='share/share.js'></script>
+
+<style>
+#background {
+	width: 100%; 
+	height: 100%; 
+	position: absolute; 
+	left: 0px; 
+	top: 0px; 
+	z-index: -1;
+	overflow:hidden;
+}
+
+#other_links a{
+	position: fixed;
+	left: 2px;
+	top: 2px; 
+	z-index: 0;
+	font-size:12px;
+	text-shadow:1px 1px 1px white;
+	border:0;
+	color: gray;
+}
+
+#share_links{
+	position: fixed;
+	right: 2px;
+	top: 2px;
+	z-index: 0;
+	font-size:12px;
+	text-shadow:1px 1px 1px white;
+	border:0;
+	color: gray;
+}
+
+#level_info {
+	font-size:14px;
+	text-shadow:1px 1px 1px white;
+	color: gray;
+	text-align: right;
+}
+
+#msg_start {
+	font-size: 36px;
+	font-family: "Bauhaus 93","Segoe Script","微软雅黑",Verdana;
+	color: blue;
+	text-shadow:0 0 4px white, 0 -5px 4px #FFFF33, 2px -7px 6px #FFDD33, 2px -10px 11px #FF8800, 2px -15px 18px #FF2200;
+}
+
+#msg_title {
+	font-size: 20px;
+	font-family: "Bauhaus 93","Segoe Script","微软雅黑",Verdana;
+	color: blue;
+	text-shadow:0 0 2px white, 0 -3px 2px #FFFF33, 1px -3px 3px #FFDD33, 1px -5px 5px #FF8800, 1px -7px 9px #FF2200;
+	padding-bottom: 5px;
+	white-space: nowrap;
+}
+
+#msg_congratulations {
+	font-size: 36px;
+	font-family: "Bauhaus 93","Segoe Script","微软雅黑",Verdana;
+	color: blue;
+	text-shadow:0 0 4px white, 0 -5px 4px #FFFF33, 2px -7px 6px #FFDD33, 2px -10px 11px #FF8800, 2px -15px 18px #FF2200;
+}
+
+#msg_game_over {
+	font-size: 36px;
+	font-family: "Bauhaus 93","Segoe Script","微软雅黑",Verdana;
+	color: blue;
+	text-shadow:0 0 4px white, 0 -5px 4px #FFFF33, 2px -7px 6px #FFDD33, 2px -10px 11px #FF8800, 2px -15px 18px #FF2200;
+}
+
+#this_score, #total_score0, #total_score1 {
+	font-size: 18px;
+	font-family: Verdana,Consolas,"Bitstream Vera Sans Mono",monospace,"Courier New";
+    color: blue;
+    text-shadow: -1px -1px 3px cyan,1px 1px 3px navy,-1px -1px cyan,1px 1px navy;
+}
+
+#bt_help {
+	margin-top: 20px;
+	text-shadow: 1px 1px 1px #404010, -1px -1px 1px #404010, -1px 1px 1px #404010, 1px -1px 1px #404010,
+		1px 1px 3px #800000, -1px -1px 3px #800000, -1px 1px 3px #800000, 1px -1px 3px #800000;
+	font-weight: bold;
+	color:#FFFFFF;
+}
+
+.bt {
+	margin-top: 20px;
+	text-shadow: 1px 1px 1px #404010, -1px -1px 1px #404010, -1px 1px 1px #404010, 1px -1px 1px #404010,
+		1px 1px 3px #800000, -1px -1px 3px #800000, -1px 1px 3px #800000, 1px -1px 3px #800000;
+	font-weight: bold;
+	color:#FFFFFF;
+}
+
+#help_logo_img {
+	vertical-align:middle;
+}
+
+.1stretch {
+	width:100%;
+	height:100%;
+}
+</style>
+<script>
+function body_resize()
+{
+	//$('background').clientWidth + ' ' + $('background').clientHeight
+	//	+ ' ' + $('bg_img').width + ' ' + $('bg_img').height;
+	var bg_img = $('bg_img');
+	var w = (bg_img.bak_old_width == undefined ? 0 : bg_img.bak_old_width);
+	var h = (bg_img.bak_old_height == undefined ? 0 : bg_img.bak_old_height);
+	var bw = $('background').clientWidth;
+	var bh = $('background').clientHeight;
+	if(w != 0 && h != 0 && bw != 0 && bh != 0)
+	{
+		if(w < bw)
+		{
+			h = Math.floor(h * bw / w);
+			w = bw;
+		}
+		if(h < bh)
+		{
+			w = Math.floor(w * bh / h);
+			h = bh;
+		}
+		if(w > bw && h > bh)
+		{
+			if(bw / w > bh / h)
+			{
+				h = Math.floor(h * bw / w);
+				w = bw;
+			}
+			else
+			{
+				w = Math.floor(w * bh / h);
+				h = bh;
+			}
+		}
+		bg_img.width = w;
+		bg_img.height = h;
+	}
+}
+</script>
+</head>
+
+<body onresize='body_resize();'>
+<table height="100%" width="100%">
+<tbody><tr>
+<td align="center" valign="middle">
+<div id='game'>
+
+<table>
+<tbody>
+<tr>
+<td align="center" valign="middle">
+<canvas id="chess_map" onclick="m_click_canvas(this,event);" width="200" height="200">
+	<p>Your browser doesn't support canvas.</p>
+</canvas>
+<div id='level_info'></div>
+</td>
+<td align="left" valign="middle">
+<div id='msg_title'>Linker Puzzle</div><br/>
+<script>
+function select(o)
+{
+	var index = o.selectedIndex;
+	o.selectedIndex = 0;
+	if(index != 0)
+	{
+		var cfg = get_config();
+		cfg.img_index = index - 1;
+		cfg.next_load = 'start';
+		set_config(cfg);
+		location.reload();
+	}
+}
+</script>
+<select id='roles' onchange='select(this);'>
+<option><script>i18n('select_role')</script></option>
+</select><br/>
+<nobr>
+	<img id='help_logo_img' width="30" height="40" src='how.gif' title='How to play'  onclick='m_click_rule("start");'/>
+	<button id='bt_help' onclick='m_click_rule("start");'><script>i18n('how_to_play')</script></button>
+</nobr><br/>
+<nobr>
+	<img id='help_logo_img' width="30" height="40" src='help.png' title='Suggestion'  onclick="m_click_help();"/>
+	<button id='bt_help' onclick="m_click_help();"><script>i18n('give_suggestion')</script></button>
+</nobr><br/>
+</td></tr></tbody></table>
+
+<audio id='au_link0' preload>
+<source src='linked.ogg'/>
+</audio>
+<audio id='au_link1' preload>
+<source src='linked.ogg'/>
+</audio>
+<audio id='au_link2' preload>
+<source src='linked.ogg'/>
+</audio>
+<audio id='au_link3' preload>
+<source src='linked.ogg'/>
+</audio>
+<audio id='au_link4' preload>
+<source src='linked.ogg'/>
+</audio>
+</div>
+<div id='game_new'>
+	<span id='msg_start'>Linker Puzzle</span><br/>
+	<button class='bt' onclick='m_game_start();'><script>i18n('resume_game')</script></button><br/>
+	<button class='bt' onclick='m_game_restart();'><script>i18n('new_game')</script></button><br/>
+	<button class='bt' onclick='m_click_rule("");'><script>i18n('how_to_play')</script></button><br/>
+	<!--<button class='bt' onclick='m_game_highscore();'>High Score</button><br/>-->
+</div>
+<div id='game_next'>
+	<span id='msg_congratulations'>Congratulations!</span><br/>
+	<span id='this_score'></span><br/>
+	<span id='total_score0'></span><br/>
+	<button class='bt' onclick='m_game_start();'><script>i18n('continue_game')</script></button><br/>
+	<!--<button class='bt' onclick='m_game_highscore();'>High Score</button><br/>-->
+</div>
+<div id='game_over'>
+	<span id='msg_game_over'>Game over!</span><br/>
+	<span id='total_score1'></span><br/>
+	<button class='bt' onclick='m_game_restart();'><script>i18n('play_again')</script></button><br/>
+	<!--<button class='bt' onclick='m_game_highscore();'>High Score</button><br/>-->
+</div>
+</td>
+</tr>
+</tbody></table>
+<div id="background">
+<img id="bg_img" class="stretch" alt="" />
+</div>
+<div id="other_links"></div>
+<div id="share_links"></div>
+</body>
+
+<script>
+var g_steps =
+[
+	//{chess_x: 12, chess_y: 8, samples_length: 100, max_time: 60, score: 100},
+	{chess_x: 4, chess_y: 4, samples_length: 8, max_time: 120, score: 100},
+	{chess_x: 6, chess_y: 4, samples_length: 10, max_time: 120, score: 100},
+	{chess_x: 8, chess_y: 6, samples_length: 13, max_time: 120, score: 100},
+	{chess_x: 8, chess_y: 6, samples_length: 16, max_time: 120, score: 100},
+	{chess_x: 8, chess_y: 6, samples_length: 24, max_time: 120, score: 100},
+	{chess_x: 8, chess_y: 6, samples_length: 32, max_time: 120, score: 100},
+	{chess_x: 8, chess_y: 6, samples_length: 52, max_time: 120, score: 100},
+	{chess_x: 9, chess_y: 8, samples_length: 52, max_time: 160, score: 100},
+	{chess_x: 9, chess_y: 8, samples_length: 52, max_time: 110, score: 100},
+	{chess_x: 10, chess_y: 8, samples_length: 52, max_time: 110, score: 100},
+	{chess_x: 10, chess_y: 8, samples_length: 52, max_time: 90, score: 100},
+	{chess_x: 10, chess_y: 8, samples_length: 60, max_time: 70, score: 100},
+	{chess_x: 11, chess_y: 8, samples_length: 70, max_time: 90, score: 100},
+	{chess_x: 11, chess_y: 8, samples_length: 80, max_time: 80, score: 100},
+	{chess_x: 11, chess_y: 8, samples_length: 90, max_time: 70, score: 100},
+	{chess_x: 11, chess_y: 8, samples_length: 100, max_time: 60, score: 100},
+	{chess_x: 12, chess_y: 8, samples_length: 100, max_time: 90, score: 100},
+	{chess_x: 12, chess_y: 8, samples_length: 100, max_time: 80, score: 100},
+	{chess_x: 12, chess_y: 8, samples_length: 100, max_time: 70, score: 100},
+	{chess_x: 12, chess_y: 8, samples_length: 100, max_time: 60, score: 100}
+	//{chess_x: 6, chess_y: 4, samples_length: 80, max_time: 60, score: 200,
+	//chess_w: 70, chess_h: 80, chess_img: 'http://a3.att.hudong.com/44/26/16300000224159124445269413260.jpg', div_x: 15, div_y: 15, bg_img: 'bg1.jpg',
+	//border_color: 'orange', line_color: 'yellow', progress_fg_color: 'orange', progress_font_color: '#800000' },
+	//{chess_x: 8, chess_y: 6, samples_length: 25, max_time: 120, score: 300,
+	//chess_w: 70, chess_h: 80, chess_img: '2.jpg', div_x: 7, div_y: 8, bg_img: 'bg0.jpg',
+	//border_color: 'orange', line_color: 'blue', progress_fg_color: 'orange', progress_font_color: '#800000' }
+];
+
+
+var g_chess_img =
+[
+	{name: 'face', chess_w: 52, chess_h: 64, div_x: 8, div_y: 4, chess_img: "chess1.jpg", bg_img: "bg0.jpg",
+	border_color: 'orange', line_color: 'blue', progress_fg_color: 'orange', progress_font_color: '#800000' },
+	{name: 'poker', chess_w: 39, chess_h: 61, div_x: 13, div_y: 4, chess_img: "chess0.png", bg_img: "bg1.jpg",
+	border_color: 'orange', line_color: 'blue', progress_fg_color: 'orange', progress_font_color: '#800000' },
+	{name: 'cjk', chess_w: 48, chess_h: 48, div_x: 1, div_y: 34, chess_img: "chess2.jpg", bg_img: ["bg_cjk0.jpg", "bg_cjk1.jpg", "bg_cjk2.jpg"], 
+	border_color: 'orange', line_color: 'blue', progress_fg_color: 'orange', progress_font_color: '#800000' }
+];
+
+
+var g_aulink = 0;
+
+var mgame = function(step)
+{
+	var cfg = get_config();
+	this.step = step;
+
+	this.chess_x = step.chess_x;
+	this.chess_y = step.chess_y;
+	this.samples_length = step.samples_length;
+	this.max_time = step.max_time;
+	this.m_chess_w = g_chess_img[cfg.img_index].chess_w;	//Width
+	this.m_chess_h = g_chess_img[cfg.img_index].chess_h;	//Height
+	this.div_x = g_chess_img[cfg.img_index].div_x;
+	this.div_y = g_chess_img[cfg.img_index].div_y;
+
+	if(this.div_x * this.div_y < this.samples_length)
+		this.samples_length = this.div_x * this.div_y;
+
+	this.m_chess_g = 8;	//Gap
+	this.arraw_len = 6;	//Length of arraw in line
+	this.line_width = 4;	//Width of line
+	this.map_left = Math.floor(this.m_chess_w * 2 / 3);
+	this.map_right = Math.floor(this.m_chess_w * 2 / 3);
+	this.map_top = Math.floor(this.m_chess_h * 2 / 3) + 5;
+	this.map_bottom = Math.floor(this.m_chess_h * 2 / 3);
+
+	this.border_color = g_chess_img[cfg.img_index].border_color;
+	this.line_color = g_chess_img[cfg.img_index].line_color;
+	this.progress_fg_color = g_chess_img[cfg.img_index].progress_fg_color;
+	this.progress_font_color = g_chess_img[cfg.img_index].progress_font_color;
+
+	var myself = this;
+
+	var bg_img = g_chess_img[cfg.img_index].bg_img;
+	if(typeof(bg_img) != 'string')
+		bg_img = bg_img[cfg.cur_step % bg_img.length]
+	this.load_img(g_chess_img[cfg.img_index].chess_img, bg_img, function()
+	{
+		myself.reset_game();
+	});
+}
+
+function m_load_bg_img(url,func)
+{
+	var img = new Image();
+	img.onload = function()
+	{
+		$('bg_img').bak_old_width = img.width;
+		$('bg_img').bak_old_height = img.height;
+		func();
+	}
+	img.src = url;
+	$('bg_img').bak_old_width = 0;
+	$('bg_img').bak_old_height = 0;
+	$('bg_img').src = url;	
+}
+
+mgame.prototype.load_img = function(chess_img, bg_img, on_load)
+{
+	var bg_img_load = false;
+	var chess_img_load = false;
+
+	m_load_bg_img(bg_img, function()
+		{
+			bg_img_load = true;
+			body_resize();
+		}
+	);
+
+	var img = new Image();
+	img.onload = function()
+	{
+		chess_img_load = true;
+	}
+	img.src = chess_img;
+	this.chess_img = img;
+
+	function check_load()
+	{
+		if(!bg_img_load || !chess_img_load)
+		{
+			setTimeout(function()
+			{
+				check_load();
+			}, 200);
+		}
+		else
+		{
+			on_load();
+		}
+	}
+	check_load();
+}
+
+mgame.prototype.init_game = function()
+{
+	/* Generate random chessman in "chessman" */
+	var chessman = [];
+	for(var i = this.chess_y * this.chess_x / 2; i-- > 0; )
+	{
+		var sample = Math.floor(Math.random() * this.samples_length);
+		chessman.splice(Math.floor(Math.random() * chessman.length), 0, sample);
+		chessman.splice(Math.floor(Math.random() * chessman.length), 0, sample);
+	}
+
+	/* Save chessman in chesses */
+	var chesses = [];
+	for(var i = 0; i < this.samples_length; ++i)
+		chesses.push([]);
+
+	var map = [];
+	for(var y = 0; y < this.chess_y; ++y)
+	{
+		var line = [];
+		for(var x = 0; x < this.chess_x; ++x)
+		{
+			var chess = chessman[y * this.chess_x + x];
+			line.push({chess: chess, show: 1});
+			chesses[chess].push({x: x, y: y});
+		}
+		map.push(line);
+	}
+
+	return {
+		map: map,
+		max_x: this.chess_x,
+		max_y: this.chess_y,
+		chesses: chesses,
+		last_click: null,
+		samples_length: this.samples_length,
+		max_time: this.max_time,
+		help_delay_time: 0,
+		start_time: new Date(),
+		running: true
+	};
+}
+
+
+mgame.prototype.reset_game = function()
+{
+	this.m = this.init_game();
+	this.set_image(this.chess_img, this.div_x, this.div_y);
+
+	this.m.canvas = $('chess_map');
+	this.m.canvas.game_data_struct = this;
+
+	if(this.check_game() == 1)
+		this.remap(false);
+	else
+		this.full_draw();
+	this.update_process();
+
+	var cfg = get_config();
+	$('level_info').innerHTML = '<nobr>'
+		+ i18n_('game_level').replace(/%s/g, cfg.cur_step + 1)
+		+ '&nbsp;'
+		+ i18n_('game_score').replace(/%s/g, cfg.cur_score)
+		+ '</nobr>';
+
+	$('game').style.display = 'block';
+	$('game_new').style.display = 'none';
+	$('game_over').style.display = 'none';
+	$('game_next').style.display = 'none';
+}
+
+
+mgame.prototype.set_image = function(img, img_div_x, img_div_y)
+{
+	var m = this.m;
+	m.img = img;
+	m.img_div_x = img_div_x;
+	m.img_div_y = img_div_y;
+	m.img_length = (img_div_x * img_div_y);
+	m.samples_offset = Math.floor(img_div_x * img_div_y * Math.random());
+
+	m.samples_index = [];
+	for(var i = 0; i < img_div_x * img_div_y; ++i)
+	{
+		if(Math.random() > 0.5)
+			m.samples_index.push(i);
+		else
+			m.samples_index.splice(0, 0, i);
+	}
+}
+
+
+mgame.prototype.full_draw = function()
+{
+	var m = this.m;
+
+	//Load the image object in JS, then apply to canvas onload
+	if(!m.canvas.getContext)
+		return;
+	
+	var map_x = m.map[0].length;
+	var map_y = m.map.length;
+
+	if(m.img_div_x * m.img_div_y < m.samples_length)
+	{
+		alert('No enough source image grid!');
+		return;
+	}
+
+
+	m.canvas.width = map_x * this.m_chess_w + (map_x + 1) * this.m_chess_g + this.map_left + this.map_right;
+	m.canvas.height = map_y * this.m_chess_h + (map_y + 1) * this.m_chess_g + this.map_top + this.map_bottom;
+
+	var sw = m.img.width / m.img_div_x;
+	var sh = m.img.height / m.img_div_y;	
+
+	var context = m.canvas.getContext('2d');
+
+	context.shadowOffsetX = 2;
+	context.shadowOffsetY = 2;
+	context.shadowBlur = 2;
+	context.shadowColor = "rgba(100, 100, 0, 0.8)";
+
+	for(var y = 0; y < m.map.length; ++y)
+	{
+		for(var x = 0; x < m.map[y].length; ++x)
+		{
+			var chessman = m.map[y][x];
+			
+			var index = (m.samples_offset + chessman.chess) % m.img_length;
+			index = m.samples_index[index];
+			var sy = Math.floor(index / m.img_div_x);
+			var sx = index - sy * m.img_div_x;
+			
+			sx = Math.floor(sx * sw);
+			sy = Math.floor(sy * sh);
+
+			var dx = x * (this.m_chess_w + this.m_chess_g) + this.m_chess_g + this.map_left;
+			var dy = y * (this.m_chess_h + this.m_chess_g) + this.m_chess_g + this.map_top;
+			var dw = this.m_chess_w;
+			var dh = this.m_chess_h;
+
+			if(chessman.show)
+			{
+				context.fillStyle = 'transparent';
+				context.fillRect(dx, dy, dw, dh);
+				context.drawImage(m.img, sx, sy, sw, sh,
+					dx, dy, dw, dh);
+			}
+			else
+			{
+
+			}
+		}
+	}
+
+	context.shadowOffsetX = 0;
+	context.shadowOffsetY = 0;
+	context.shadowBlur = 0;
+
+	//this.draw_process();
+}
+
+
+mgame.prototype.draw_process = function()
+{
+	var m = this.m;
+
+	if(!m.canvas.getContext)
+		return;
+	var context = m.canvas.getContext('2d');
+
+	var cur = Math.floor((new Date() - m.start_time + m.help_delay_time) / 1000);
+	var max = m.max_time;
+	
+	var x = this.m_chess_g + this.map_left;
+	var y = 1;
+	var w =  m.max_x * this.m_chess_w + (m.max_x - 1) * this.m_chess_g;
+	var h = 20;
+	var pos = Math.floor(cur * w / max);
+
+	context.clearRect(x, y, w + 4, h + 4);
+
+	context.shadowOffsetX = 2;
+	context.shadowOffsetY = 2;
+	context.shadowBlur = 2;
+	context.shadowColor = "rgba(100, 100, 0, 0.8)";
+
+	context.fillStyle = this.progress_fg_color;
+	context.fillRect(x, y, pos, h);
+	context.fillStyle = 'gray';
+	context.fillRect(x + pos, y, w - pos, h);
+	context.fillStyle = this.progress_font_color;
+	context.font = "16px Comic Sans MS bold";
+	var text = (max - cur) + '';
+	context.fillText(text, Math.floor(x + w / 2) - text.length * 8 + 8, y + 16);
+
+	context.shadowOffsetX = 0;
+	context.shadowOffsetY = 0;
+	context.shadowBlur = 0;
+
+	context.strokeStyle = this.border_color;
+	context.lineWidth = 2;
+	context.strokeRect(
+		this.map_left - this.m_chess_g,
+		this.map_top - this.m_chess_g,
+		m.max_x * this.m_chess_w + (m.max_x + 3) * this.m_chess_g,
+		m.max_y * this.m_chess_h + (m.max_y + 3) * this.m_chess_g);
+
+	if(cur >= max)
+	{
+		m.running = false;
+
+		var myself = this;
+		setTimeout(function()
+		{
+			//alert('Game over');
+			//m_reset_game();
+			var score = myself.get_score();
+			m_game_over(score);
+		}, 0);
+	}
+	// The linker puzzle is developped by chenon (2011)
+	// at gmail dot com, and can not be used in other applications
+	// or software without the author's permission.
+}
+
+mgame.prototype.click_1st = function(x, y)
+{
+	var m = this.m;
+
+	if(!m.canvas.getContext)
+		return;
+	var context = m.canvas.getContext('2d');
+
+	var chessman = m.map[y][x];
+	if(!chessman.show)
+		return;
+
+	var dx = x * (this.m_chess_w + this.m_chess_g) + this.m_chess_g + this.map_left;
+	var dy = y * (this.m_chess_h + this.m_chess_g) + this.m_chess_g + this.map_top;
+	var dw = this.m_chess_w;
+	var dh = this.m_chess_h;
+		
+	
+	context.strokeStyle = 'red';	
+	context.lineWidth = 2;
+	context.strokeRect(dx, dy, dw, dh);
+}
+
+mgame.prototype.click_2nd = function(x, y)
+{
+	var m = this.m;
+
+	if(!m.canvas.getContext)
+		return;
+	var context = m.canvas.getContext('2d');
+
+	var chessman = m.map[y][x];
+	if(!chessman.show)
+		return;
+
+	var dx = x * (this.m_chess_w + this.m_chess_g) + this.m_chess_g + this.map_left;
+	var dy = y * (this.m_chess_h + this.m_chess_g) + this.m_chess_g + this.map_top;
+	var dw = this.m_chess_w;
+	var dh = this.m_chess_h;
+		
+	
+	context.strokeStyle = 'blue';	
+	context.lineWidth = 2;
+	context.strokeRect(dx, dy, dw, dh);
+}
+
+
+mgame.prototype.unclick = function(x, y)
+{
+	var m = this.m;
+
+	if(!m.canvas.getContext)
+		return;
+	var context = m.canvas.getContext('2d');
+
+	var chessman = m.map[y][x];
+	if(!chessman.show)
+		return;
+
+	var sw = m.img.width / m.img_div_x;
+	var sh = m.img.height / m.img_div_y;	
+			
+	var index = (m.samples_offset + chessman.chess) % m.img_length;
+	index = m.samples_index[index];
+	var sy = Math.floor(index / m.img_div_x);
+	var sx = index - sy * m.img_div_x;
+	sx = Math.floor(sx * sw);
+	sy = Math.floor(sy * sh);
+
+	var dx = x * (this.m_chess_w + this.m_chess_g) + this.m_chess_g + this.map_left;
+	var dy = y * (this.m_chess_h + this.m_chess_g) + this.m_chess_g + this.map_top;
+	var dw = this.m_chess_w;
+	var dh = this.m_chess_h;
+
+	var border = Math.floor(this.m_chess_g / 2);
+	context.clearRect(dx - border, dy - border, dw + border * 2, dh + border * 2);
+	if(chessman.show)
+	{
+		context.shadowOffsetX = 2;
+		context.shadowOffsetY = 2;
+		context.shadowBlur = 2;
+		context.shadowColor = "rgba(100, 100, 0, 0.8)";		
+		context.fillStyle = 'transparent';
+		context.fillRect(dx, dy, dw, dh);
+		context.drawImage(m.img, sx, sy, sw, sh,
+			dx, dy, dw, dh);
+		context.shadowOffsetX = 0;
+		context.shadowOffsetY = 0;
+		context.shadowBlur = 0;
+	}
+	else
+	{
+	}
+}
+
+
+mgame.prototype.show_line = function(x_arr, y_arr)
+{
+	var m = this.m;
+
+	if(!m.canvas.getContext)
+		return;
+	var context = m.canvas.getContext('2d');
+
+	if(x_arr.length < 2)
+		return;
+
+	//Check the direction
+	var x0 = x_arr[x_arr.length - 2];
+	var x1 = x_arr[x_arr.length - 1];
+	var y0 = y_arr[y_arr.length - 2];
+	var y1 = y_arr[y_arr.length - 1];
+	x0 = x0 * (this.m_chess_w + this.m_chess_g) + Math.floor(this.m_chess_w / 2) + this.m_chess_g + this.map_left;
+	x1 = x1 * (this.m_chess_w + this.m_chess_g) + Math.floor(this.m_chess_w / 2) + this.m_chess_g + this.map_left;
+	y0 = y0 *  (this.m_chess_h + this.m_chess_g) + Math.floor(this.m_chess_h / 2) + this.m_chess_g + this.map_top;
+	y1 = y1 *  (this.m_chess_h + this.m_chess_g) + Math.floor(this.m_chess_h / 2) + this.m_chess_g + this.map_top;
+
+	if(x0 == x1)
+	{
+		var y = (y0 < y1 ? y1 - this.arraw_len : y1 + this.arraw_len);
+		arraw_x0 = x1 - this.arraw_len; arraw_y0 = y;
+		arraw_x1 = x1 + this.arraw_len; arraw_y1 = y;
+	}
+	else
+	{
+		var x = (x0 < x1 ? x1 - this.arraw_len : x1 + this.arraw_len);
+		arraw_x0 = x; arraw_y0 = y1 - this.arraw_len;
+		arraw_x1 = x; arraw_y1 = y1 + this.arraw_len;		
+	}
+
+	context.beginPath();
+	context.moveTo(arraw_x0, arraw_y0);
+	context.lineTo(x1, y1);
+	context.lineTo(arraw_x1, arraw_y1);
+
+	context.moveTo(
+		x_arr[0] *  (this.m_chess_w + this.m_chess_g) + Math.floor(this.m_chess_w / 2) + this.m_chess_g + this.map_left,
+		y_arr[0] *  (this.m_chess_h + this.m_chess_g) + Math.floor(this.m_chess_h / 2) + this.m_chess_g + this.map_top);
+	for(var i = 1; i < x_arr.length; ++i)
+		context.lineTo(
+			x_arr[i] *  (this.m_chess_w + this.m_chess_g) + Math.floor(this.m_chess_w / 2) + this.m_chess_g + this.map_left,
+			y_arr[i] *  (this.m_chess_h + this.m_chess_g) + Math.floor(this.m_chess_h / 2) + this.m_chess_g + this.map_top);
+
+	context.strokeStyle = this.line_color;	
+	context.lineWidth = this.line_width;	
+	//context.closePath();
+	context.stroke();
+}
+
+
+mgame.prototype.clear_line = function(x_arr, y_arr)
+{
+	var m = this.m;
+
+	if(!m.canvas.getContext)
+		return;
+	var context = m.canvas.getContext('2d');
+
+	var x0 = x_arr[0];
+	var y0 = y_arr[0];
+	for(var i = 1; i < x_arr.length; ++i)
+	{
+		var x1 = x_arr[i];
+		var y1 = y_arr[i];
+
+		for(var x = x0;
+		(x0 < x1 && x <= x1) || (x0 >= x1 && x >= x1);
+			(x0 < x1 ? ++x : --x))
+		{
+			for(var y = y0;
+				(y0 < y1 && y <= y1) || (y0 >= y1 && y >= y1);
+				(y0 < y1 ? ++y : --y))
+			{
+				var dx = x * (this.m_chess_w + this.m_chess_g) + this.m_chess_g + this.map_left;
+				var dy = y * (this.m_chess_h + this.m_chess_g) + this.m_chess_g + this.map_top;
+				var dw = this.m_chess_w;
+				var dh = this.m_chess_h;
+				var border = Math.floor(this.m_chess_g / 2);
+				context.clearRect(dx - border, dy - border, dw + border * 2, dh + border * 2);
+			}
+		}
+
+		x0 = x1;
+		y0 = y1;
+	}
+
+	this.draw_process();
+}
+
+
+function m_click_canvas(o,evt)
+{
+	/* Get position of mouse */
+	var mx = evt.clientX + document.body.scrollLeft;
+	var my = evt.clientY + document.body.scrollTop;
+
+	/* Get position of canvas */
+	var pos = get_pos(o);
+
+	/* Get poistion of mouse relative to chessman */
+	mx = mx - pos.x;
+	my = my - pos.y;
+
+	var game = o.game_data_struct;
+	game.on_click_canvas(mx, my)
+}
+
+mgame.prototype.on_click_canvas = function(mx, my)
+{
+	var m = this.m;
+
+	/* Get poistion of mouse relative to chessman */
+	mx = mx - this.map_left - this.m_chess_g;
+	my = my - this.map_top - this.m_chess_g;
+	/* Get position of clicked chessman */
+	if(mx < 0 || my < 0)
+		return;
+
+	var x = Math.floor(mx / (this.m_chess_w + this.m_chess_g));
+	if(x >= m.max_x || mx >= x * (this.m_chess_w + this.m_chess_g) + this.m_chess_w)
+		return;
+	var y = Math.floor(my / (this.m_chess_h + this.m_chess_g));
+	if(y >= m.max_y || my >= y * (this.m_chess_h + this.m_chess_g) + this.m_chess_h)
+		return;
+
+	if(!m.map[y][x].show)
+		return;	//Has already been removed
+
+	this.check_click(x, y);
+}
+
+mgame.prototype.check_click = function(x, y)
+{
+	var m = this.m;
+
+	if(m.last_click == null)
+	{
+		this.click_1st(x, y);
+		m.last_click = {x: x, y: y};
+	}
+	else if(m.last_click.x == x && m.last_click.y == y)
+	{
+		this.click_1st(x, y);
+	}
+	else
+	{
+		var x0 = m.last_click.x;
+		var y0 = m.last_click.y;
+
+		var link_path = null;
+		/* Check if they are same chessman */
+		if(m.map[y0][x0].chess == m.map[y][x].chess)
+			link_path = this.get_link_path(x0, y0, x, y);
+
+		if(!link_path)
+		{
+			this.unclick(m.last_click.x, m.last_click.y);
+			m.last_click = null;
+
+			this.click_1st(x, y);
+			m.last_click = {x: x, y: y};
+		}
+		else
+		{
+			g_aulink++;
+			if(g_aulink >= 5)
+				g_aulink = 0;
+			var au = $('au_link' + g_aulink);
+			au.play();
+			
+			this.click_2nd(x, y);
+			link_path = this.normalize_link_path(x0, y0, link_path, x, y);
+			m.last_click = null;
+			/* Remove the 2 chessmen */
+			this.remove_chessman(x0, y0);
+			this.remove_chessman(x, y);
+			/* Check if the game is dead */
+			var game_status = this.check_game();
+			this.show_line(link_path.x, link_path.y);
+
+			/* Clear chessman */
+			var myself = this;
+			setTimeout(function()
+			{
+				myself.clear_line(link_path.x, link_path.y);
+				if(game_status == 2)
+				{
+					m.running = false;
+					//alert('You win!');
+					setTimeout(function()
+					{
+						//m_reset_game();
+						var score = myself.get_score();
+						m_game_next(score);
+					}, 0);
+				}
+				else if(game_status == 1)
+				{
+					myself.remap(true);
+					myself.draw_process();
+				}
+			}, 150);
+		}
+	}
+}
+
+mgame.prototype.get_score = function()
+{
+	var m = this.m;
+
+	var cur = Math.floor(new Date() - m.start_time + m.help_delay_time);
+	var max = m.max_time * 1000;
+	var time_score = Math.floor(cur < max ? (3 * (max - cur) * this.step.score / max) : 0);
+
+	/* Get remaining chesses */
+	var total = 0;
+	var removed = 0;
+	for(var i = 0; i < m.map.length; ++i)
+	{
+		var line = m.map[i];
+		for(var j = 0; j < line.length; ++j)
+		{
+			++total;
+			if(!line[j].show)
+				++removed;
+		}
+	}
+	var step_score = Math.floor(removed * this.step.score / total);
+
+	return {step_score: step_score, time_score: time_score};
+	
+}
+
+mgame.prototype.remove_chessman = function(x, y)
+{
+	var m = this.m;
+
+	m.map[y][x].show = 0;
+	var chesses = m.chesses[m.map[y][x].chess];
+	for(var i = 0; i < chesses.length; ++i)
+	{
+		if(chesses[i].x == x && chesses[i].y == y)
+		{
+			chesses.splice(i, 1);
+			return;
+		}
+	}
+}
+
+mgame.prototype.check_game = function()
+{
+	var m = this.m;
+
+	var has_chessman = false;
+	for(var i = 0; i < m.chesses.length; ++i)
+	{
+		var chesses = m.chesses[i];
+		for(var j = 0; j < chesses.length; ++j)
+		{
+			has_chessman = true;
+			for(var k = j + 1; k < chesses.length; ++k)
+			{
+				if(this.is_link(chesses[j].x, chesses[j].y, chesses[k].x, chesses[k].y))
+					return 0;	//OK
+			}
+		}
+	}
+
+	if(has_chessman)
+	{
+		//alert('Need remap!');
+		return 1;
+	}
+	else
+	{
+		//alert('You win!');
+		return 2;
+	}
+}
+
+
+mgame.prototype.get_help = function()
+{
+	var m = this.m;
+
+	for(var i = 0; i < m.chesses.length; ++i)
+	{
+		var chesses = m.chesses[i];
+		for(var j = 0; j < chesses.length; ++j)
+		{
+			for(var k = j + 1; k < chesses.length; ++k)
+			{
+				if(this.is_link(chesses[j].x, chesses[j].y, chesses[k].x, chesses[k].y))
+					return {chess: i, from: j, to: k};
+			}
+		}
+	}
+
+	return null;
+}
+
+mgame.prototype.show_help = function(path)
+{
+	var m = this.m;
+
+	if(m.last_click != null)
+	{
+		this.unclick(m.last_click.x, m.last_click.y);
+		m.last_click = null;
+	}
+
+	var f = m.chesses[path.chess][path.from];
+	var t = m.chesses[path.chess][path.to];
+
+	var link_path = this.get_link_path(f.x, f.y, t.x, t.y);
+	link_path = this.normalize_link_path(f.x, f.y, link_path, t.x, t.y);
+
+	//m.last_click = null;
+	/* Remove the 2 chessmen */
+	//this.remove_chessman(x0, y0);
+	//this.remove_chessman(x, y);
+	
+	/* Check if the game is dead */
+	this.click_1st(f.x, f.y);
+	this.click_2nd(t.x, t.y);
+	this.show_line(link_path.x, link_path.y);
+	var myself = this;
+	setTimeout(function()
+	{
+		myself.clear_line(link_path.x, link_path.y);
+		myself.full_draw();
+		myself.draw_process();
+		setTimeout(function()
+		{
+			myself.click_1st(f.x, f.y);
+			myself.click_2nd(t.x, t.y);
+			myself.show_line(link_path.x, link_path.y);
+			setTimeout(function()
+			{
+				myself.clear_line(link_path.x, link_path.y);
+				myself.full_draw();
+				myself.draw_process();
+			}, 300);
+		}, 150);
+	}, 300);
+}
+
+function m_click_rule(next_load)
+{
+	location = ('howto.htm?' + next_load);
+}
+
+function m_click_help()
+{
+	//m_auto_play();
+	//return;
+
+	var game = $('chess_map').game_data_struct;
+	var path = game.get_help();
+	if(path != null)
+	{
+		game.m.help_delay_time += 5000;	//Reduce 5 seconds on help
+		game.show_help(path);
+	}
+}
+
+function m_auto_play()
+{
+	var game = $('chess_map').game_data_struct;
+	var path = game.get_help();
+
+	var m = game.m;
+	if(path != null)
+	{
+		var f = m.chesses[path.chess][path.from];
+		var t = m.chesses[path.chess][path.to];
+
+		game.check_click(f.x, f.y);
+		setTimeout(function()
+		{
+			game.check_click(t.x, t.y);
+			setTimeout(function()
+			{
+				m_auto_play();
+			}, 2000);
+		}, 2000);
+	}
+}
+
+mgame.prototype.remap = function(show_msg)
+{
+	var m = this.m;
+
+	//if(show_msg)
+	//	alert('Need remap!');
+
+	do
+	{
+		var chesses = [];
+		for(var i = 0; i < m.chesses.length; ++i)
+		{
+			for(var j = 0; j < m.chesses[i].length; ++j)
+			{
+				var c = m.chesses[i][j];
+				chesses.push({x: c.x, y: c.y});
+			}
+		}
+
+		for(var i = Math.floor(chesses.length / 2); i-- > 0;)
+		{
+			var item = chesses.splice(Math.floor(Math.random() * chesses.length), 1);
+			chesses.push(item[0]);
+		}
+
+		var n = 0;
+		for(var i = 0; i < m.chesses.length; ++i)
+		{
+			for(var j = 0; j < m.chesses[i].length; ++j)
+			{
+				var c = chesses[n++];
+				m.chesses[i][j] = {x: c.x, y: c.y};
+				m.map[c.y][c.x].chess = i;
+			}
+		}
+	} while(this.check_game() != 0);
+
+	this.full_draw();
+}
+
+
+mgame.prototype.normalize_link_path = function(x0, y0, path, x1, y1)
+{
+	var i = [];
+	var j = [];
+	
+	i[0] = x0;
+	i[1] = path.x[0];
+	i[2] = path.x[1];
+	i[3] = x1;
+
+	j[0] = y0;
+	j[1] = path.y[0];
+	j[2] = path.y[1];
+	j[3] = y1;
+
+	var removed = true;
+	while(i.length >= 3 && removed)
+	{
+		removed = false;
+		for(var n = 0; n + 2 < i.length; ++n)
+		{
+			if((i[n] == i[n + 1] && i[n + 1] == i[n + 2])
+				|| (j[n] == j[n + 1] && j[n + 1] == j[n + 2]))
+			{
+				/* Remove i[n + 1] */
+				i.splice(n + 1, 1);
+				j.splice(n + 1, 1);
+				removed = true;
+				break;
+			}
+		}
+	}
+
+	return {x: i, y: j}
+}
+
+mgame.prototype.get_link_path = function(x0, y0, x1, y1)
+{
+	var m = this.m;
+
+	m.map[y0][x0].show = 0;
+	m.map[y1][x1].show = 0;
+
+	var ret = this.get_link_path_(x0, y0, x1, y1);
+
+	/* Restore show state here */
+	m.map[y0][x0].show = 1;
+	m.map[y1][x1].show = 1;	
+
+	return ret;
+}
+
+mgame.prototype.get_link_path_ = function(x0, y0, x1, y1)
+{
+	var m = this.m;
+
+	if(y0 != y1)
+	{
+		var x0f = x0 - 1;
+		for(; x0f >= 0; --x0f)
+			if(m.map[y0][x0f].show)
+				break;
+		var x1f = x1 - 1;
+		for(; x1f >= 0; --x1f)
+			if(m.map[y1][x1f].show)
+				break;
+		var xf = (x0f > x1f ? x0f : x1f);
+		//if(xf < 0)
+		//	return {x: [xf, xf], y: [y0, y1]};
+				
+		var x0t = x0 + 1;
+		for(; x0t < m.map[y0].length; ++x0t)
+			if(m.map[y0][x0t].show)
+				break;
+		var x1t = x1 + 1;
+		for(; x1t < m.map[y1].length; ++x1t)
+			if(m.map[y1][x1t].show)
+				break;
+		var xt = (x0t < x1t ? x0t : x1t);
+		//if(xt >= m.map[y0].length)
+		//	return {x: [xt, xt], y: [y0, y1]};
+
+		var xm0 = (x0 < x1 ? x0 : x1);
+		var xm1 = (x0 < x1 ? x1 : x0);
+		
+		var range;
+		if(xm0 >= xf + 1 && xm0 < xt
+			&& xm1 >= xf + 1 && xm1 < xt)
+			range =
+			[
+				{f: xm0, t: xm1, s: 1},
+				{f: xm1, t: xt, s: 1},
+				{f: xm0 - 1, t: xf, s: -1}
+			];			
+		else
+		if(xm0 >= xf + 1 && xm0 < xt)
+			range =
+			[
+				{f: xm0, t: xt, s: 1},
+				{f: xm0 - 1, t: xf, s: -1}
+			];
+		else
+		if(xm0 >= xf + 1 && xm0 < xt)
+			range =
+			[
+				{f: xm1, t: xt, s: 1},
+				{f: xm1 - 1, t: xf, s: -1}
+			];
+		else
+			range =
+			[
+				{f: xf + 1, t: xt, s: 1}
+			];
+
+		for(var k = 0; k < range.length; ++k)
+		{
+			for(var i = range[k].f;
+	   			i * range[k].s < range[k].t * range[k].s;
+				i += range[k].s)
+			{
+				/* Check if m.map[y0][i] can be connected to m.map[y1][i] */
+				var yf = (y0 < y1 ? y0 : y1);
+				var yt = (y0 < y1 ? y1 : y0);
+				var j = yf;
+				for(; j <= yt; ++j)
+					if(m.map[j][i].show)
+						break;
+				if(!(j <= yt))
+				{
+					//alert('1===' + i + ' ' + y0 + ' ' + y1);
+					/* OK, return the path here */
+					return {x: [i, i], y: [y0, y1]};
+				}
+			}
+		}
+
+		if(xf < 0)
+			return {x: [xf, xf], y: [y0, y1]};
+		if(xt >= m.map[y0].length)
+			return {x: [xt, xt], y: [y0, y1]};		
+	}
+
+	if(x0 != x1)
+	{
+		var y0f = y0 - 1;
+		for(; y0f >= 0; --y0f)
+			if(m.map[y0f][x0].show)
+				break;
+		var y1f = y1 - 1;
+		for(; y1f >= 0; --y1f)
+			if(m.map[y1f][x1].show)
+				break;
+		var yf = (y0f > y1f ? y0f : y1f);
+		//if(yf < 0)
+		//	return {x: [x0, x1], y: [yf, yf]};
+		
+		var y0t = y0 + 1;
+		for(; y0t < m.map.length; ++y0t)
+			if(m.map[y0t][x0].show)
+				break;
+		var y1t = y1 + 1;
+		for(; y1t < m.map.length; ++y1t)
+			if(m.map[y1t][x1].show)
+				break;
+		var yt = (y0t < y1t ? y0t : y1t);
+		//if(yt >= m.map.length)
+		//	return {x: [x0, x1], y: [yt, yt]};
+
+		var ym0 = (y0 < y1 ? y0 : y1);
+		var ym1 = (y0 < y1 ? y1 : y0);
+
+		var range;
+		if(ym0 >= yf + 1 && ym0 < yt
+			&& ym1 >= yf + 1 && ym1 < yt)
+			range =
+			[
+				{f: ym0, t: ym1, s: 1},
+				{f: ym1, t: yt, s: 1},
+				{f: ym0 - 1, t: yf, s: -1}
+			];			
+		else
+		if(ym0 >= yf + 1 && ym0 < yt)
+			range =
+			[
+				{f: ym0, t: yt, s: 1},
+				{f: ym0 - 1, t: yf, s: -1}
+			];
+		else
+		if(ym0 >= yf + 1 && ym0 < yt)
+			range =
+			[
+				{f: ym1, t: yt, s: 1},
+				{f: ym1 - 1, t: yf, s: -1}
+			];
+		else
+			range =
+			[
+				{f: yf + 1, t: yt, s: 1}
+			];
+
+		for(var k = 0; k < range.length; ++k)
+		{
+			for(var i = range[k].f;
+				i * range[k].s < range[k].t * range[k].s;
+				i += range[k].s)
+			{
+				/* Check if m.map[i][x0] can be connected to m.map[i][x1] */
+				var xf = (x0 < x1 ? x0 : x1);
+				var xt = (x0 < x1 ? x1 : x0);
+				var j = xf;
+				for(; j <= xt; ++j)
+					if(m.map[i][j].show)
+						break;
+				if(!(j <= xt))
+				{
+					//alert('2===' + i + ' ' + x0 + ' ' + x1);				
+					/* OK, return the path here */
+					return {x: [x0, x1], y: [i, i]};
+				}
+			}
+		}
+		
+		if(yf < 0)
+			return {x: [x0, x1], y: [yf, yf]};
+		if(yt >= m.map.length)
+			return {x: [x0, x1], y: [yt, yt]};			
+	}
+
+	return null;
+}
+
+/* m_is_link is similar to get_link_path, but more quick! */
+mgame.prototype.is_link = function(x0, y0, x1, y1)
+{
+	var m = this.m;
+	m.map[y0][x0].show = 0;
+	m.map[y1][x1].show = 0;
+
+	var ret = this.is_link_(x0, y0, x1, y1);
+
+	/* Restore show state here */
+	m.map[y0][x0].show = 1;
+	m.map[y1][x1].show = 1;	
+
+	return ret;
+}
+
+mgame.prototype.is_link_ = function(x0, y0, x1, y1)
+{
+	var m = this.m;
+	if(y0 != y1)
+	{
+		var x0f = x0 - 1;
+		for(; x0f >= 0; --x0f)
+			if(m.map[y0][x0f].show)
+				break;
+		var x1f = x1 - 1;
+		for(; x1f >= 0; --x1f)
+			if(m.map[y1][x1f].show)
+				break;
+		var xf = (x0f > x1f ? x0f : x1f);
+		if(xf < 0)
+			return true;
+				
+		var x0t = x0 + 1;
+		for(; x0t < m.map[y0].length; ++x0t)
+			if(m.map[y0][x0t].show)
+				break;
+		var x1t = x1 + 1;
+		for(; x1t < m.map[y1].length; ++x1t)
+			if(m.map[y1][x1t].show)
+				break;
+		var xt = (x0t < x1t ? x0t : x1t);
+		if(xt >= m.map[y0].length)
+			return true;
+
+		for(var i = xf + 1; i < xt; ++i)
+		{
+			/* Check if m.map[y0][i] can be connected to m.map[y1][i] */
+			var yf = (y0 < y1 ? y0 : y1);
+			var yt = (y0 < y1 ? y1 : y0);
+			var j = yf
+			for(; j <= yt; ++j)
+				if(m.map[j][i].show)
+					break;
+			if(!(j <= yt))
+			{
+				/* OK, return the path here */
+				return true;
+			}
+		}
+	}
+
+	if(x0 != x1)
+	{
+		var y0f = y0 - 1;
+		for(; y0f >= 0; --y0f)
+			if(m.map[y0f][x0].show)
+				break;
+		var y1f = y1 - 1;
+		for(; y1f >= 0; --y1f)
+			if(m.map[y1f][x1].show)
+				break;
+		var yf = (y0f > y1f ? y0f : y1f);
+		if(yf < 0)
+			return true;
+		
+		var y0t = y0 + 1;
+		for(; y0t < m.map.length; ++y0t)
+			if(m.map[y0t][x0].show)
+				break;
+		var y1t = y1 + 1;
+		for(; y1t < m.map.length; ++y1t)
+			if(m.map[y1t][x1].show)
+				break;
+		var yt = (y0t < y1t ? y0t : y1t);
+		if(yt >= m.map.length)
+			return true;
+
+		for(var i = yf + 1; i < yt; ++i)
+		{
+			/* Check if m.map[i][x0] can be connected to m.map[i][x1] */
+			var xf = (x0 < x1 ? x0 : x1);
+			var xt = (x0 < x1 ? x1 : x0);
+			var j = xf
+			for(; j <= xt; ++j)
+				if(m.map[i][j].show)
+					break;
+			if(!(j <= xt))
+			{
+				/* OK, return the path here */
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+
+function get_pos(obj)
+{
+	var x = 0;
+	var y = 0;
+	while (obj.offsetParent)
+	{
+		x += obj.offsetLeft + obj.clientLeft;
+		y += obj.offsetTop + obj.clientTop;	
+		obj = obj.offsetParent;
+	}
+	return {x: x, y: y};
+}
+
+mgame.prototype.update_process = function()
+{
+	var m = this.m;
+
+	if(!m.running) return;
+
+	this.draw_process();
+
+	var myself = this;
+	setTimeout(function()
+	{
+		myself.update_process();
+	}, 1000);
+}
+
+
+function m_game_new()
+{
+	for(var i = 0; i < g_chess_img.length; ++i)
+	{
+		var o = document.createElement('option');
+		o.value = i;
+		o.text = i18n_('role_' + g_chess_img[i].name);
+		$('roles').appendChild(o);
+	}
+
+	var cfg = get_config();
+	if(cfg.img_index >= g_chess_img.length)
+	{
+		cfg.img_index = 0;
+		set_config(cfg);
+	}
+
+	$('game').style.display = 'none';
+	$('game_new').style.display = 'none';
+	$('game_over').style.display = 'none';
+	$('game_next').style.display = 'none';
+	
+	if(cfg.next_load == 'start')
+	{
+		cfg.next_load = undefined;
+		set_config(cfg);
+		m_game_start();
+	}
+	else
+	{
+		var bg_img = g_chess_img[cfg.img_index].bg_img;
+		if(typeof(bg_img) != 'string')
+			bg_img = bg_img[cfg.cur_step % bg_img.length]
+		m_load_bg_img(bg_img,
+			function()
+			{
+				$('game_new').style.display = 'block';
+				body_resize();
+			}
+		);
+	}
+}
+
+
+function m_game_restart()
+{
+	var cfg = get_config();
+	cfg.cur_step = 0;
+	cfg.cur_score = 0;
+
+	set_config(cfg);
+	new mgame(g_steps[cfg.cur_step]);
+}
+
+function m_game_start()
+{
+	var cfg = get_config();
+	if(cfg.cur_step >= g_steps.length)
+		cfg.cur_step = 0;
+	new mgame(g_steps[cfg.cur_step]);
+}
+
+function m_game_next(score)
+{
+	var cfg = get_config();
+	cfg.cur_score += score.step_score + score.time_score;
+	++cfg.cur_step;
+	set_config(cfg);
+
+	$('total_score0').innerHTML = i18n_('total_score') + ' ' + cfg.cur_score;
+	$('this_score').innerHTML = i18n_('win_score') + ' ' + score.step_score + ' + ' + i18n_('time_bonus') + ' ' + score.time_score;
+
+	$('game').style.display = 'none';
+	$('game_new').style.display = 'none';
+	$('game_over').style.display = 'none';
+
+	var bg_img = g_chess_img[cfg.img_index].bg_img;
+	if(typeof(bg_img) != 'string')
+		bg_img = bg_img[cfg.cur_step % bg_img.length]
+	m_load_bg_img(bg_img,
+		function()
+		{
+			$('game_next').style.display = 'block';
+			body_resize();
+		}
+	);	
+}
+
+function m_game_over(score)
+{
+	var cfg = get_config();
+	cfg.cur_score += score.step_score + score.time_score;
+	set_config(cfg);
+	$('total_score1').innerHTML = i18n_('total_score') + ' ' + cfg.cur_score;
+
+	var cfg = get_config();
+	cfg.cur_step = 0;
+	cfg.cur_score = 0;
+	set_config(cfg);
+	
+	$('game').style.display = 'none';
+	$('game_new').style.display = 'none';
+	$('game_next').style.display = 'none';
+
+	var bg_img = g_chess_img[cfg.img_index].bg_img;
+	if(typeof(bg_img) != 'string')
+		bg_img = bg_img[cfg.cur_step % bg_img.length]
+	m_load_bg_img(bg_img,
+		function()
+		{
+			$('game_over').style.display = 'block';
+			body_resize();
+		}
+	);	
+}
+
+
+m_game_new();
+</script>
+</html>
+

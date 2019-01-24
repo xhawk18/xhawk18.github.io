@@ -1,0 +1,101 @@
+﻿{
+	"other_ext": {
+		"message": "作者的其他chrome擴展和程序"
+	},
+	"ext_name": {
+		"message": "連連看 [離線遊戲]"
+	},
+	"ext_description": {
+		"message": "找到相同的兩個圖案，點擊連接使之消去。純離線模式遊戲，運行無需聯網。"
+	},
+	"interested_game": {
+		"message": "轉發一個chrome的離線應用, 連連看遊戲, 有點意思！"
+	},
+	"share_more": {
+		"message": "請幫忙分享給更多的朋友："
+	},
+	"share_to": {
+		"message": "分享到"
+	},
+	"sina_wb": {
+		"message": "新浪微博"
+	},
+	"qq_wb": {
+		"message": "QQ微博"
+	},
+	"163_wb": {
+		"message": "網易微博"
+	},
+	"sohu_wb": {
+		"message": "搜狐微博"
+	},
+	"kaixin": {
+		"message": "開心網"
+	},
+	"renren": {
+		"message": "人人網"
+	},
+	"douban": {
+		"message": "豆瓣網"
+	},
+	"taobao_jh": {
+		"message": "淘江湖"
+	},
+	"how_to_play": {
+		"message": "遊戲規則"
+	},
+	"give_suggestion": {
+		"message": "提示一下"
+	},
+	"resume_game": {
+		"message": "上次遊戲"
+	},
+	"new_game": {
+		"message": "新遊戲"
+	},
+	"continue_game": {
+		"message": "進入下一關"
+	},
+	"play_again": {
+		"message": "重玩一次"
+	},
+	"game_level": {
+		"message": "第%s關"
+	},
+	"game_score": {
+		"message": "累計得分:%s"
+	},
+	"win_score": {
+		"message": "本局得分:"
+	},
+	"time_bonus": {
+		"message": "時間獎勵分:"
+	},
+	"total_score": {
+		"message": "您的累計得分:"
+	},
+	"back_to_game": {
+		"message": "返回遊戲"
+	},
+	"select_role": {
+		"message": "--選擇圖案--"
+	},
+	"role_poker": {
+		"message": "撲克"
+	},
+	"role_face": {
+		"message": "京劇臉譜"
+	},
+	"role_cjk": {
+		"message": "蒼井空和書法"
+	},
+	"how_to_description": {
+		"message": "找到相同的兩個圖案，點擊連接使之消去。連接消去的時候，至多允許三根橫向或豎向的線段，並且這些線段需要避過其他的圖案。"
+	},
+	"how_to_ok": {
+		"message": "一些例子"
+	},
+	"how_to_fail": {
+		"message": "您不能這樣連接"
+	}
+}

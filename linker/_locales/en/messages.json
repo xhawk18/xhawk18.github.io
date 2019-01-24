@@ -1,0 +1,101 @@
+﻿{
+	"other_ext": {
+		"message": "Other extensions/apps by the author"
+	},
+	"ext_name": {
+		"message": "Linker Puzzle [Offline Game] 連連看"
+	},
+	"ext_description": {
+		"message": "Find two identical pictures in the canvas every time, and link them to make them disappear. The \"Linker Puzzle\" is a offline game and does not need a network."
+	},
+	"interested_game": {
+		"message": "Here's an interesting game \"Linker Puzzle\", hope you like it!"
+	},
+	"share_more": {
+		"message": "Please share to others："
+	},
+	"share_to": {
+		"message": "Share to"
+	},
+	"sina_wb": {
+		"message": "t.sina.com.cn"
+	},
+	"qq_wb": {
+		"message": "t.qq.com"
+	},
+	"163_wb": {
+		"message": "t.163.com"
+	},
+	"sohu_wb": {
+		"message": "t.sina.com"
+	},
+	"kaixin": {
+		"message": "Kaixin001.com"
+	},
+	"renren": {
+		"message": "renren.com"
+	},
+	"douban": {
+		"message": "douban.com"
+	},
+	"taobao_jh": {
+		"message": "taobao.com"
+	},
+	"how_to_play": {
+		"message": "How to play?"
+	},
+	"give_suggestion": {
+		"message": "Suggestion"
+	},
+	"resume_game": {
+		"message": "Resume Game"
+	},
+	"new_game": {
+		"message": "New Game"
+	},
+	"continue_game": {
+		"message": "Continue"
+	},
+	"play_again": {
+		"message": "Play Again"
+	},
+	"game_level": {
+		"message": "Level %s"
+	},
+	"game_score": {
+		"message": "Total score %s"
+	},
+	"win_score": {
+		"message": "Win score:"
+	},
+	"time_bonus": {
+		"message": "time bonus:"
+	},
+	"total_score": {
+		"message": "You total score:"
+	},
+	"back_to_game": {
+		"message": "Back to game"
+	},
+	"select_role": {
+		"message": "--Select a role--"
+	},
+	"role_poker": {
+		"message": "Poker"
+	},
+	"role_face": {
+		"message": "Peking Opera Make-ups"
+	},
+	"role_cjk": {
+		"message": "Aoi Sora & Calligraphy"
+	},
+	"how_to_description": {
+		"message": "Find two identical pictures in the canvas every time, and link them to make them disappear. The two pictures should be linked by at most three horizontal or vertical lines without crossing any existing pictures."
+	},
+	"how_to_ok": {
+		"message": "Some examples"
+	},
+	"how_to_fail": {
+		"message": "You CAN NOT link in this way"
+	}
+}

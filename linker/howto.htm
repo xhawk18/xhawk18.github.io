@@ -1,0 +1,59 @@
+<html>
+<head>
+<style>
+body {
+	margin-top: 20px;
+	text-shadow: 1px 1px 1px #404010, -1px -1px 1px #404010, -1px 1px 1px #404010, 1px -1px 1px #404010,
+		1px 1px 3px #800000, -1px -1px 3px #800000, -1px 1px 3px #800000, 1px -1px 3px #800000;
+	color:#FFFFFF;
+}
+
+.bt {
+	margin-top: 20px;
+	text-shadow: 1px 1px 1px #404010, -1px -1px 1px #404010, -1px 1px 1px #404010, 1px -1px 1px #404010,
+		1px 1px 3px #800000, -1px -1px 3px #800000, -1px 1px 3px #800000, 1px -1px 3px #800000;
+	font-weight: bold;
+	color:#FFFFFF;
+}
+</style>
+<script src='msg_head.js'></script>
+<script src='linker.js'></script>
+<script>
+function m_back_to_game()
+{
+	var next_load = location.search.replace(/^\?/, "");
+	if(next_load == 'start')
+	{
+		var cfg = get_config();
+		cfg.next_load = 'start';
+		set_config(cfg);
+	}
+	location = 'linker.htm';
+}
+</script>
+
+</head>
+<body>
+<div>
+<p><script>i18n('how_to_description')</script></p>
+</div>
+<div>
+<button class='bt' onclick='m_back_to_game()'><script>i18n('back_to_game')</script></button>
+</div>
+<div>
+<p><script>i18n('how_to_ok')</script></p>
+<div><img src='howto/ok0.png'/></div>
+<div><img src='howto/ok1.png'/></div>
+<div><img src='howto/ok2.png'/></div>
+</div>
+<div>
+<p><script>i18n('how_to_fail')</script></p>
+<div><img src='howto/fail0.png'/></div>
+<div><img src='howto/fail1.png'/></div>
+</div>
+<div>
+<button class='bt' onclick='m_back_to_game()'><script>i18n('back_to_game')</script></button>
+</div>
+</body>
+</html>
+
