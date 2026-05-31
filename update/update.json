@@ -9,6 +9,6 @@
         "de": "Ordner kopieren/einfügen wird unterstützt"
     },
 	"url": "http://www.baidu.com",
-	"force": false,
-	"use_browser": true
+	"force": true,
+	"use_browser": false
 }
