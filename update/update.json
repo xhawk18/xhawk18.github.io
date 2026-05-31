@@ -1,7 +1,14 @@
 {
 	"ver": "2026.06.01",
-	"text": "support folder copy/paster",
+    "text": {
+        "en": "Support folder copy/paste",
+        "zh-CN": "支持文件夹复制粘贴",
+        "zh-TW": "支援資料夾複製貼上",
+        "ja": "フォルダーのコピー/貼り付けに対応",
+        "fr": "Prise en charge de la copie de dossiers",
+        "de": "Ordner kopieren/einfügen wird unterstützt"
+    },
 	"url": "http://www.baidu.com",
-	"force": true,
+	"force": false,
 	"use_browser": false
 }
