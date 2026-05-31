@@ -10,5 +10,5 @@
     },
 	"url": "http://www.baidu.com",
 	"force": false,
-	"use_browser": false
+	"use_browser": true
 }
