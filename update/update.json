@@ -1,5 +1,6 @@
 {
-	"text": "version 2026-06-01, support folder copy/paster",
+	"ver": "2026.06.01",
+	"text": "support folder copy/paster",
 	"url": "http://www.google.com",
 	"force": true,
 	"use_browser": true
