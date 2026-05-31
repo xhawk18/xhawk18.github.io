@@ -2,6 +2,6 @@
 	"ver": "2026.06.01",
 	"text": "support folder copy/paster",
 	"url": "http://www.baidu.com",
-	"force": true,
-	"use_browser": false
+	"force": false,
+	"use_browser": true
 }
